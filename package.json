@@ -1,9 +1,9 @@
 {
-  "name": "cudi-coffee-route-planner",
+  "name": "cotti-coffee-route-planner",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "NYC route planning app for Cudi Coffee store visits",
+  "description": "NYC route planning app for Cotti Coffee store visits",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

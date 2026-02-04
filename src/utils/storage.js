@@ -3,9 +3,9 @@ import { STORAGE_KEYS } from './constants';
 
 // Configure localforage
 localforage.config({
-  name: 'CudiCoffeeRoutePlanner',
+  name: 'CottiCoffeeRoutePlanner',
   version: 1.0,
-  storeName: 'cudi_data'
+  storeName: 'cotti_data'
 });
 
 /**
@@ -109,7 +109,7 @@ export const routeStorage = {
 export const poiStorage = {
   async get() {
     try {
-      const data = await localforage.getItem('cudi_pois');
+      const data = await localforage.getItem('cotti_pois');
       if (!data) return null;
 
       // Check if cache is expired
@@ -132,7 +132,7 @@ export const poiStorage = {
         cachedAt: Date.now(),
         ttl
       };
-      await localforage.setItem('cudi_pois', data);
+      await localforage.setItem('cotti_pois', data);
       return true;
     } catch (error) {
       console.error('Error saving POIs:', error);
@@ -142,7 +142,7 @@ export const poiStorage = {
 
   async clear() {
     try {
-      await localforage.removeItem('cudi_pois');
+      await localforage.removeItem('cotti_pois');
       return true;
     } catch (error) {
       console.error('Error clearing POIs:', error);

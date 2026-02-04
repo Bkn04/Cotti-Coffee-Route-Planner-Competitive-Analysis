@@ -11,6 +11,7 @@ import { useCompetitors } from './hooks/useCompetitors';
 import { usePOI } from './hooks/usePOI';
 import { useSubway } from './hooks/useSubway';
 import { calculateFootTrafficScore, generateHeatmapData } from './services/heatmap';
+import { analyzePOIDistribution } from './services/poi';
 
 function App() {
   const {
@@ -77,11 +78,12 @@ function App() {
 
   // Generate POI analysis by store
   const poiAnalysisByStore = useMemo(() => {
+    if (!pois || pois.length === 0) return {};
+
     const result = {};
     stores.forEach(store => {
       const storePOIs = getPOIsNearStore(store.id);
       if (storePOIs && storePOIs.length > 0) {
-        const { analyzePOIDistribution } = require('./services/poi');
         result[store.id] = analyzePOIDistribution(storePOIs);
       }
     });
@@ -94,7 +96,7 @@ function App() {
       <div className="sidebar">
         <div className="sidebar-header">
           <h1>库迪咖啡路线规划</h1>
-          <p>Cudi Coffee Route Planner - NYC</p>
+          <p>Cotti Coffee Route Planner - NYC</p>
         </div>
 
         <div className="sidebar-content">

@@ -230,18 +230,24 @@ function MapView({
       })}
 
       {/* Heatmap visualization */}
-      {showHeatmap && heatmapData.length > 0 && heatmapData.map((point, index) => (
-        <Circle
-          key={`heatmap-${index}`}
-          center={[point.lat, point.lng]}
-          radius={50}
-          pathOptions={{
-            fillColor: getHeatmapColor(point.intensity),
-            fillOpacity: point.intensity * 0.6,
-            stroke: false
-          }}
-        />
-      ))}
+      {showHeatmap && heatmapData.length > 0 && heatmapData.map((point, index) => {
+        if (point.intensity < 0.1) return null; // Skip very low intensity points
+        return (
+          <Circle
+            key={`heatmap-${index}`}
+            center={[point.lat, point.lng]}
+            radius={80}
+            pathOptions={{
+              fillColor: getHeatmapColor(point.intensity),
+              fillOpacity: Math.max(0.3, point.intensity * 0.7),
+              stroke: true,
+              color: getHeatmapColor(point.intensity),
+              weight: 1,
+              opacity: 0.4
+            }}
+          />
+        );
+      })}
     </MapContainer>
   );
 }

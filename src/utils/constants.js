@@ -80,11 +80,11 @@ export const MAP_CONFIG = {
 
 // LocalStorage Keys
 export const STORAGE_KEYS = {
-  STORES: 'cudi_stores',
-  CURRENT_LOCATION: 'cudi_current_location',
-  ROUTE: 'cudi_route',
-  COMPETITORS: 'cudi_competitors',
-  PREFERENCES: 'cudi_preferences'
+  STORES: 'cotti_stores',
+  CURRENT_LOCATION: 'cotti_current_location',
+  ROUTE: 'cotti_route',
+  COMPETITORS: 'cotti_competitors',
+  PREFERENCES: 'cotti_preferences'
 };
 
 // Cache TTL (Time To Live) in milliseconds

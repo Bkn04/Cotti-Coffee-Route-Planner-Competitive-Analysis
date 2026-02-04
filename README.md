@@ -1,10 +1,10 @@
-# 库迪咖啡路线规划应用 | Cudi Coffee Route Planner
+# 库迪咖啡路线规划应用 | Cotti Coffee Route Planner
 
 一款专为库迪咖啡纽约区域经理设计的路线规划工具，用于优化每日多店铺选址访问路线。
 
 ## 🌐 在线演示
 
-**正式版本：** [立即体验](https://your-username.github.io/cudi-coffee-route-planner) *(部署后替换链接)*
+**正式版本：** [立即体验](https://your-username.github.io/cotti-coffee-route-planner) *(部署后替换链接)*
 
 **本地运行：** 见下方"快速开始"章节
 
@@ -236,7 +236,7 @@ npm run deploy
 
 ```javascript
 {
-  "cudi_stores": [
+  "cotti_stores": [
     {
       "id": "uuid",
       "name": "店铺名称",
@@ -246,11 +246,11 @@ npm run deploy
       "addedAt": "2024-02-02T..."
     }
   ],
-  "cudi_current_location": {
+  "cotti_current_location": {
     "address": "Times Square",
     "coordinates": { "lat": 40.7589, "lng": -73.9851 }
   },
-  "cudi_route": {
+  "cotti_route": {
     "route": [...],
     "stats": { ... },
     "optimizedAt": "2024-02-02T..."
