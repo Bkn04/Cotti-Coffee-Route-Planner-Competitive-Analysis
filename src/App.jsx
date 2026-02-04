@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import MapView from './components/Map/MapView';
 import AddressInput from './components/Controls/AddressInput';
 import StoreList from './components/Controls/StoreList';
 import RouteSummary from './components/RoutePanel/RouteSummary';
+import SubwayInstructions from './components/RoutePanel/SubwayInstructions';
+import POIAnalysis from './components/Analysis/POIAnalysis';
 import { useStores } from './hooks/useStores';
 import { useRoute } from './hooks/useRoute';
 import { useCompetitors } from './hooks/useCompetitors';
+import { usePOI } from './hooks/usePOI';
+import { useSubway } from './hooks/useSubway';
+import { calculateFootTrafficScore, generateHeatmapData } from './services/heatmap';
 
 function App() {
   const {
@@ -27,12 +32,61 @@ function App() {
   } = useRoute(currentLocation, stores);
 
   const [showCompetitors, setShowCompetitors] = useState(false);
+  const [showSubway, setShowSubway] = useState(false);
+  const [showPOIZones, setShowPOIZones] = useState(false);
+  const [showHeatmap, setShowHeatmap] = useState(false);
 
   const {
     competitors,
     isLoading: competitorsLoading,
     refreshCompetitors
   } = useCompetitors(stores, showCompetitors);
+
+  const {
+    pois,
+    analysis,
+    insights,
+    isLoading: poisLoading,
+    refreshPOIs,
+    getPOIsNearStore
+  } = usePOI(stores, showPOIZones);
+
+  const {
+    subwayRoutes,
+    nearbyStations,
+    isCalculating: subwayCalculating,
+    getNearestStation
+  } = useSubway(currentLocation, stores, optimizedRoute);
+
+  // Calculate foot traffic score
+  const footTrafficScore = useMemo(() => {
+    if (!pois || pois.length === 0 || !currentLocation) return 0;
+    return calculateFootTrafficScore(pois, currentLocation.coordinates.lat, currentLocation.coordinates.lng);
+  }, [pois, currentLocation]);
+
+  // Generate heatmap data
+  const heatmapData = useMemo(() => {
+    if (!showHeatmap || !currentLocation || pois.length === 0) return [];
+    return generateHeatmapData(
+      currentLocation.coordinates.lat,
+      currentLocation.coordinates.lng,
+      pois,
+      500
+    );
+  }, [showHeatmap, currentLocation, pois]);
+
+  // Generate POI analysis by store
+  const poiAnalysisByStore = useMemo(() => {
+    const result = {};
+    stores.forEach(store => {
+      const storePOIs = getPOIsNearStore(store.id);
+      if (storePOIs && storePOIs.length > 0) {
+        const { analyzePOIDistribution } = require('./services/poi');
+        result[store.id] = analyzePOIDistribution(storePOIs);
+      }
+    });
+    return result;
+  }, [stores, pois, getPOIsNearStore]);
 
   return (
     <div className="app-container">
@@ -100,25 +154,64 @@ function App() {
             />
           )}
 
-          {/* Store List */}
+          {/* Subway Instructions */}
+          {showSubway && subwayRoutes && subwayRoutes.length > 0 && (
+            <SubwayInstructions
+              subwayRoutes={subwayRoutes}
+              isCalculating={subwayCalculating}
+            />
+          )}
+
+          {/* POI Analysis */}
+          {showPOIZones && analysis && (
+            <POIAnalysis
+              analysis={analysis}
+              insights={insights}
+              footTrafficScore={footTrafficScore}
+              isLoading={poisLoading}
+            />
+          )}
+
+          {/* Feature Controls */}
           {stores.length > 0 && (
             <div className="card">
-              <div className="card-header flex items-center justify-between">
-                <span>📋 店铺列表 ({stores.length})</span>
+              <div className="card-header">🔧 功能控制</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <button
-                  className="btn btn-sm btn-secondary"
+                  className={`btn btn-sm ${showCompetitors ? 'btn-primary' : 'btn-secondary'}`}
                   onClick={() => setShowCompetitors(!showCompetitors)}
                   disabled={competitorsLoading}
                 >
-                  {competitorsLoading ? (
-                    <>
-                      <span className="loading-spinner"></span>
-                      <span>加载中...</span>
-                    </>
-                  ) : (
-                    showCompetitors ? '隐藏竞品' : '显示竞品'
-                  )}
+                  {competitorsLoading ? '⏳' : showCompetitors ? '✓ 竞品' : '☕ 竞品'}
                 </button>
+                <button
+                  className={`btn btn-sm ${showSubway ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setShowSubway(!showSubway)}
+                >
+                  {showSubway ? '✓ 地铁' : '🚇 地铁'}
+                </button>
+                <button
+                  className={`btn btn-sm ${showPOIZones ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setShowPOIZones(!showPOIZones)}
+                  disabled={poisLoading}
+                >
+                  {poisLoading ? '⏳' : showPOIZones ? '✓ 业态' : '📊 业态'}
+                </button>
+                <button
+                  className={`btn btn-sm ${showHeatmap ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setShowHeatmap(!showHeatmap)}
+                >
+                  {showHeatmap ? '✓ 热力图' : '🔥 热力图'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Store List */}
+          {stores.length > 0 && (
+            <div className="card">
+              <div className="card-header">
+                <span>📋 店铺列表 ({stores.length})</span>
               </div>
               <StoreList
                 stores={optimizedRoute.length > 0 ? optimizedRoute : stores}
@@ -150,6 +243,12 @@ function App() {
           optimizedRoute={optimizedRoute}
           showCompetitors={showCompetitors}
           competitors={competitors}
+          showSubway={showSubway}
+          nearbyStations={nearbyStations}
+          showPOIZones={showPOIZones}
+          poiAnalysisByStore={poiAnalysisByStore}
+          showHeatmap={showHeatmap}
+          heatmapData={heatmapData}
         />
 
         {/* Competitor Info Overlay */}

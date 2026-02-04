@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import { MAP_CONFIG, NYC_BOUNDS } from '../../utils/constants';
 import { calculateCenter } from '../../utils/distance';
 import CompetitorMarker from './CompetitorMarker';
+import SubwayStationMarker from './SubwayStationMarker';
+import POIZone from './POIZone';
 
 // Fix for default marker icons in React-Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -100,7 +102,19 @@ function MapController({ currentLocation, stores }) {
   return null;
 }
 
-function MapView({ currentLocation, stores, optimizedRoute, showCompetitors, competitors = [] }) {
+function MapView({
+  currentLocation,
+  stores,
+  optimizedRoute,
+  showCompetitors,
+  competitors = [],
+  showSubway = false,
+  nearbyStations = [],
+  showPOIZones = false,
+  poiAnalysisByStore = {},
+  showHeatmap = false,
+  heatmapData = []
+}) {
   // Calculate route path
   const routePath = [];
   if (currentLocation && optimizedRoute.length > 0) {
@@ -191,8 +205,54 @@ function MapView({ currentLocation, stores, optimizedRoute, showCompetitors, com
           competitor={competitor}
         />
       ))}
+
+      {/* Subway Station Markers */}
+      {showSubway && nearbyStations.map(station => (
+        <SubwayStationMarker
+          key={station.id}
+          station={station}
+        />
+      ))}
+
+      {/* POI Zones (500m circles) */}
+      {showPOIZones && stores.map(store => {
+        const analysis = poiAnalysisByStore[store.id];
+        if (analysis) {
+          return (
+            <POIZone
+              key={`poi-zone-${store.id}`}
+              store={store}
+              poiAnalysis={analysis}
+            />
+          );
+        }
+        return null;
+      })}
+
+      {/* Heatmap visualization */}
+      {showHeatmap && heatmapData.length > 0 && heatmapData.map((point, index) => (
+        <Circle
+          key={`heatmap-${index}`}
+          center={[point.lat, point.lng]}
+          radius={50}
+          pathOptions={{
+            fillColor: getHeatmapColor(point.intensity),
+            fillOpacity: point.intensity * 0.6,
+            stroke: false
+          }}
+        />
+      ))}
     </MapContainer>
   );
+}
+
+// Helper function to get heatmap color based on intensity
+function getHeatmapColor(intensity) {
+  if (intensity > 0.7) return '#DC2626'; // Red - Very high
+  if (intensity > 0.5) return '#F59E0B'; // Orange - High
+  if (intensity > 0.3) return '#FBBF24'; // Yellow - Medium
+  if (intensity > 0.1) return '#10B981'; // Green - Low
+  return '#6EE7B7'; // Light green - Very low
 }
 
 export default MapView;

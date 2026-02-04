@@ -572,3 +572,251 @@ input:checked + .toggle-slider:before {
 .gap-2 {
   gap: var(--spacing-md);
 }
+
+/* Subway Instructions Styles */
+.subway-routes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.subway-route-segment {
+  border-left: 3px solid var(--primary-blue);
+  padding-left: var(--spacing-md);
+}
+
+.route-segment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  font-size: 14px;
+}
+
+.subway-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.subway-step {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.step-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-text {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.step-subtext {
+  font-size: 12px;
+  color: var(--gray-500);
+}
+
+.subway-lines-display {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.subway-line-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 24px;
+  text-align: center;
+}
+
+.step-time {
+  font-size: 11px;
+  color: var(--gray-400);
+  margin-top: 2px;
+}
+
+.route-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary-label {
+  font-size: 11px;
+  color: var(--gray-500);
+}
+
+.summary-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary-blue);
+}
+
+/* POI Analysis Styles */
+.foot-traffic-score {
+  margin-bottom: var(--spacing-md);
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.score-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.score-bar {
+  height: 8px;
+  background-color: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.poi-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.distribution-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.distribution-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 12px;
+}
+
+.distribution-icon {
+  font-size: 16px;
+}
+
+.distribution-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.distribution-count {
+  font-size: 11px;
+  color: var(--gray-500);
+}
+
+.distribution-bar-container {
+  height: 20px;
+  background-color: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.distribution-bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  transition: width 0.5s ease;
+}
+
+.distribution-percentage {
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+
+.business-insights {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+}
+
+.insights-header {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: var(--spacing-sm);
+  color: var(--gray-700);
+}
+
+.insight-item {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  background-color: var(--gray-50);
+  border-radius: var(--radius-md);
+  border-left: 3px solid transparent;
+}
+
+.insight-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.insight-content {
+  flex: 1;
+}
+
+.insight-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: var(--gray-800);
+}
+
+.insight-description {
+  font-size: 11px;
+  color: var(--gray-600);
+  line-height: 1.4;
+}
+
+/* Feature Control Grid */
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1D4ED8;
+}
+
+.btn-primary:disabled {
+  background-color: var(--gray-400);
+  cursor: not-allowed;
+}
