@@ -32,8 +32,8 @@ export function useCompetitors(stores, enabled = false) {
         return;
       }
 
-      // Fetch from API
-      const freshCompetitors = await fetchCompetitorsForStores(stores, 804); // 0.5 miles = 804 meters
+      // Fetch from API (0.2 miles = 322 meters)
+      const freshCompetitors = await fetchCompetitorsForStores(stores, 322);
 
       setCompetitors(freshCompetitors);
 

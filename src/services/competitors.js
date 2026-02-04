@@ -34,6 +34,8 @@ export async function fetchCompetitorsNearLocation(lat, lng, radiusMeters = 500)
     );
 
     if (response.data && response.data.elements) {
+      const allowedBrands = ['STARBUCKS', 'LUCKIN', 'BLANK_STREET', 'DUNKIN'];
+
       return response.data.elements
         .filter(element => element.type === 'node' && element.lat && element.lon)
         .map(element => ({
@@ -46,7 +48,8 @@ export async function fetchCompetitorsNearLocation(lat, lng, radiusMeters = 500)
           },
           address: element.tags?.['addr:street'] || '',
           tags: element.tags
-        }));
+        }))
+        .filter(competitor => allowedBrands.includes(competitor.brand)); // Only keep specified brands
     }
 
     return [];

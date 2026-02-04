@@ -105,6 +105,52 @@ export const routeStorage = {
   }
 };
 
+// POI storage (with caching)
+export const poiStorage = {
+  async get() {
+    try {
+      const data = await localforage.getItem('cudi_pois');
+      if (!data) return null;
+
+      // Check if cache is expired
+      const now = Date.now();
+      if (data.cachedAt && now - data.cachedAt > data.ttl) {
+        return null; // Cache expired
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error reading POIs:', error);
+      return null;
+    }
+  },
+
+  async set(pois, ttl = 24 * 60 * 60 * 1000) {
+    try {
+      const data = {
+        pois,
+        cachedAt: Date.now(),
+        ttl
+      };
+      await localforage.setItem('cudi_pois', data);
+      return true;
+    } catch (error) {
+      console.error('Error saving POIs:', error);
+      return false;
+    }
+  },
+
+  async clear() {
+    try {
+      await localforage.removeItem('cudi_pois');
+      return true;
+    } catch (error) {
+      console.error('Error clearing POIs:', error);
+      return false;
+    }
+  }
+};
+
 // Competitors storage (with caching)
 export const competitorStorage = {
   async get() {
